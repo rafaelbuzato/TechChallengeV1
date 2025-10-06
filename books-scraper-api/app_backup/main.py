@@ -21,18 +21,18 @@ logger = logging.getLogger(__name__)
 
 # ==================== IMPORTS ====================
 
-from config import (
+from app.config import (
     PROJECT_NAME, VERSION, DESCRIPTION, API_V1_PREFIX, 
     ALLOWED_ORIGINS, DATA_FILE, ACCESS_TOKEN_EXPIRE_MINUTES
 )
-from models import (
+from app.models import (
     Book, LoginRequest, TokenResponse, RefreshTokenRequest,
     HealthResponse, CategoryResponse, ScrapingResponse,
     StatsOverview, CategoriesStatsResponse,
     MLFeaturesResponse, MLTrainingData, PredictionRequest, PredictionResponse
 )
-from auth import authenticate_user, create_access_token, create_refresh_token, get_admin_user
-from database import (
+from app.auth import authenticate_user, create_access_token, create_refresh_token, get_admin_user
+from app.database import (
     get_books, find_book_by_id, search_books, get_categories, clear_cache,
     get_stats_overview, get_category_stats, get_top_rated_books, get_books_by_price_range,
     get_ml_features, get_ml_training_data, predict_rating
@@ -42,7 +42,7 @@ from database import (
 
 MIDDLEWARE_AVAILABLE = False
 try:
-    from middleware import (
+    from app.middleware import (
         RequestLoggingMiddleware, MetricsMiddleware, 
         get_metrics_instance, set_metrics_instance
     )
@@ -121,7 +121,7 @@ async def login(data: LoginRequest):
 async def refresh(data: RefreshTokenRequest):
     """Renova access token"""
     from jose import jwt, JWTError
-    from config import SECRET_KEY, ALGORITHM
+    from app.config import SECRET_KEY, ALGORITHM
     
     try:
         payload = jwt.decode(data.refresh_token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -131,7 +131,7 @@ async def refresh(data: RefreshTokenRequest):
         if not username or token_type != "refresh":
             raise HTTPException(status_code=401, detail="Token inválido")
         
-        from auth import USERS_DB
+        from app.auth import USERS_DB
         user = USERS_DB.get(username)
         
         if not user:
@@ -425,7 +425,7 @@ async def shutdown():
 
 if __name__ == "__main__":
     import uvicorn
-    from config import API_HOST, API_PORT, DEBUG
+    from app.config import API_HOST, API_PORT, DEBUG
     
     uvicorn.run(
         "app.main:app",

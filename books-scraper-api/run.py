@@ -4,7 +4,7 @@ Script para iniciar a API
 """
 
 import uvicorn
-from app.config import API_HOST, API_PORT, DEBUG
+from config import API_HOST, API_PORT, DEBUG
 
 if __name__ == "__main__":
     print("🚀 Iniciando Books Scraper API...")
@@ -13,7 +13,7 @@ if __name__ == "__main__":
     print("="*50)
     
     uvicorn.run(
-        "app.main:app",
+        "main:app",
         host=API_HOST,
         port=API_PORT,
         reload=DEBUG
