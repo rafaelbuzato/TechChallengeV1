@@ -1,37 +1,38 @@
 #!/usr/bin/env bash
-# Build script para Render
 set -o errexit
 
-echo "🔧 Iniciando build..."
+echo "🔧 Build starting..."
+echo "📁 Current directory: $(pwd)"
 
 # Atualizar pip
-echo "📦 Atualizando pip..."
 pip install --upgrade pip
 
 # Instalar dependências
-echo "📚 Instalando dependências..."
+echo "📚 Installing dependencies..."
 pip install -r requirements.txt
 
-# Criar diretórios necessários
-echo "📁 Criando diretórios..."
-mkdir -p data
-mkdir -p logs
-
-# Executar scraper para gerar dados iniciais
-echo "🕷️  Executando web scraper..."
+# Criar diretórios
+mkdir -p data logs
 
 # Garantir __init__.py
+echo "📝 Creating __init__.py files..."
 touch app/__init__.py
 touch scraper/__init__.py
 
+# Verificar estrutura
+echo "📂 Project structure:"
+ls -la
+
+# Executar scraper
+echo "🕷️  Running web scraper..."
 python scraper/scraper.py
 
-# Verificar se dados foram gerados
+# Verificar dados
 if [ -f "data/books_data.xlsx" ]; then
-    echo "✅ Dados gerados com sucesso!"
+    echo "✅ Data generated successfully!"
     ls -lh data/
 else
-    echo "⚠️  Aviso: Arquivo de dados não encontrado"
+    echo "⚠️  Warning: Data file not found"
 fi
 
-echo "✅ Build concluído com sucesso!"
+echo "✅ Build complete!"
