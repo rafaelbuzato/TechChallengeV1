@@ -19,6 +19,11 @@ mkdir -p logs
 
 # Executar scraper para gerar dados iniciais
 echo "🕷️  Executando web scraper..."
+
+# Garantir __init__.py
+touch app/__init__.py
+touch scraper/__init__.py
+
 python scraper/scraper.py
 
 # Verificar se dados foram gerados
