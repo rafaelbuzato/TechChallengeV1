@@ -6,16 +6,12 @@ services:
     plan: free
     branch: main
     buildCommand: |
-      echo "🔧 Build starting..."
       pip install --upgrade pip
       pip install -r requirements.txt
-      echo "📁 Creating __init__.py files..."
-      touch app/__init__.py
-      touch scraper/__init__.py
-      echo "🕷️  Running scraper..."
+      echo '"""Books Scraper API"""' > app/__init__.py
+      echo '"""Web Scraper"""' > scraper/__init__.py
       python scraper/scraper.py
-      echo "✅ Build complete!"
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    startCommand: python server.py
     healthCheckPath: /api/v1/health
     envVars:
       - key: PYTHON_VERSION
@@ -24,5 +20,11 @@ services:
         value: false
       - key: SECRET_KEY
         generateValue: true
+      - key: API_HOST
+        value: 0.0.0.0
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 30
+      - key: REFRESH_TOKEN_EXPIRE_DAYS
+        value: 7
       - key: PYTHONUNBUFFERED
         value: "1"
